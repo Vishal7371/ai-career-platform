@@ -1,26 +1,27 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.api.routes import auth                    # ← ADD THIS
 
-# Create the FastAPI app
 app = FastAPI(
     title=settings.APP_NAME,
     description="AI-Powered Career Analytics Platform API",
     version="1.0.0",
-    docs_url="/docs",       # Auto-generated API docs at /docs
-    redoc_url="/redoc"      # Alternative docs at /redoc
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
-# Allow React frontend to talk to this backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # React dev server
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Root endpoint — your first API!
+# Register route modules
+app.include_router(auth.router)                    # ← ADD THIS
+
 @app.get("/")
 def root():
     return {
@@ -29,7 +30,6 @@ def root():
         "version": "1.0.0"
     }
 
-# Health check endpoint
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
