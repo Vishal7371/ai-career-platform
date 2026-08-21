@@ -11,12 +11,12 @@ export default function Dashboard() {
   }
 
   const navItems = [
-    { icon: '🏠', label: 'Dashboard',      active: true  },
-    { icon: '📄', label: 'Resume',         active: false },
-    { icon: '💼', label: 'Job Matching',   active: false },
-    { icon: '📊', label: 'Analytics',      active: false },
-    { icon: '🤖', label: 'AI Assistant',   active: false },
-    { icon: '⚙️', label: 'Settings',       active: false },
+    { icon: '🏠', label: 'Dashboard',    path: '/dashboard', active: true  },
+    { icon: '📄', label: 'Resume',       path: '/dashboard', active: false },
+    { icon: '💼', label: 'Job Matching', path: '/jobs',      active: false },
+    { icon: '📊', label: 'Analytics',    path: '/dashboard', active: false },
+    { icon: '🤖', label: 'AI Assistant', path: '/dashboard', active: false },
+    { icon: '⚙️', label: 'Settings',     path: '/dashboard', active: false },
   ]
 
   const stats = [
@@ -44,7 +44,7 @@ export default function Dashboard() {
 
         <nav className="sidebar-nav">
           {navItems.map((item) => (
-            <div key={item.label} className={`nav-item ${item.active ? 'active' : ''}`}>
+            <div key={item.label} className={`nav-item ${item.active ? 'active' : ''}`} onClick={() => navigate(item.path)}>
               <span className="icon">{item.icon}</span>
               {item.label}
             </div>

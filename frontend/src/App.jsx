@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login     from './pages/Login'
 import Register  from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import Jobs      from './pages/Jobs'
 
 // Protect dashboard — redirect to login if not logged in
 function PrivateRoute({ children }) {
@@ -18,6 +19,9 @@ export default function App() {
         <Route path="/register"  element={<Register />} />
         <Route path="/dashboard" element={
           <PrivateRoute><Dashboard /></PrivateRoute>
+        } />
+        <Route path="/jobs" element={
+          <PrivateRoute><Jobs /></PrivateRoute>
         } />
       </Routes>
     </BrowserRouter>
