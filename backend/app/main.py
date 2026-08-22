@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.routes import auth
 from app.api.routes import jobs
+from app.api.routes import resume
 
 
 app = FastAPI(
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(jobs.router)
+app.include_router(resume.router)
 
 # Register route modules
 app.include_router(auth.router)                    # ← ADD THIS

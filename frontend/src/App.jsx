@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Login     from './pages/Login'
-import Register  from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import Jobs      from './pages/Jobs'
+import Login      from './pages/Login'
+import Register   from './pages/Register'
+import Dashboard  from './pages/Dashboard'
+import Jobs       from './pages/Jobs'
+import ResumePage from './pages/ResumePage'
 
 // Protect dashboard — redirect to login if not logged in
 function PrivateRoute({ children }) {
@@ -22,6 +23,9 @@ export default function App() {
         } />
         <Route path="/jobs" element={
           <PrivateRoute><Jobs /></PrivateRoute>
+        } />
+        <Route path="/resume" element={
+          <PrivateRoute><ResumePage /></PrivateRoute>
         } />
       </Routes>
     </BrowserRouter>

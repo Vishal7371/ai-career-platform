@@ -12,7 +12,7 @@ export default function Dashboard() {
 
   const navItems = [
     { icon: '🏠', label: 'Dashboard',    path: '/dashboard', active: true  },
-    { icon: '📄', label: 'Resume',       path: '/dashboard', active: false },
+    { icon: '📄', label: 'Resume',       path: '/resume',    active: false },
     { icon: '💼', label: 'Job Matching', path: '/jobs',      active: false },
     { icon: '📊', label: 'Analytics',    path: '/dashboard', active: false },
     { icon: '🤖', label: 'AI Assistant', path: '/dashboard', active: false },
