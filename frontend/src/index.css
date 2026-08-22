@@ -688,3 +688,77 @@ body {
 
 .resume-skills { margin-top: 4px; }
 .skills-label  { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
+
+/* ════════════════════════════════════════
+   MATCHES PAGE
+════════════════════════════════════════ */
+.your-skills-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+.your-skills-card h3 { font-size: 1rem; font-weight: 600; color: #fff; }
+
+.match-list { display: flex; flex-direction: column; gap: 16px; }
+
+.match-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.match-card:hover { transform: translateY(-2px); border-color: rgba(124,58,237,0.4); }
+
+.match-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* Score Ring */
+.score-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid;
+  flex-shrink: 0;
+}
+.score-ring.score-high { border-color: #10b981; background: rgba(16,185,129,0.1); }
+.score-ring.score-mid  { border-color: #f59e0b; background: rgba(245,158,11,0.1); }
+.score-ring.score-low  { border-color: #ef4444; background: rgba(239,68,68,0.1);  }
+
+.score-num { font-size: 1.3rem; font-weight: 800; color: #fff; line-height: 1; }
+.score-lbl { font-size: 0.65rem; color: var(--muted); }
+
+.match-job-info { flex: 1; }
+.match-job-info h3 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.match-job-info p  { font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+
+.match-skills-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.match-label  { font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.match-yes    { color: #34d399; }
+.match-no     { color: #fbbf24; }
+
+.skill-matched {
+  background: rgba(16,185,129,0.12) !important;
+  border-color: rgba(16,185,129,0.3) !important;
+  color: #34d399 !important;
+}
+.skill-missing {
+  background: rgba(245,158,11,0.12) !important;
+  border-color: rgba(245,158,11,0.3) !important;
+  color: #fbbf24 !important;
+}

@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.api.routes import auth
 from app.api.routes import jobs
 from app.api.routes import resume
+from app.api.routes import matching
 
 
 app = FastAPI(
@@ -24,6 +25,7 @@ app.add_middleware(
 
 app.include_router(jobs.router)
 app.include_router(resume.router)
+app.include_router(matching.router)
 
 # Register route modules
 app.include_router(auth.router)                    # ← ADD THIS
