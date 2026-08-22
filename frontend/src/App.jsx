@@ -5,6 +5,7 @@ import Dashboard  from './pages/Dashboard'
 import Jobs       from './pages/Jobs'
 import ResumePage from './pages/ResumePage'
 import Matches    from './pages/Matches'
+import Profile    from './pages/Profile'
 
 // Protect dashboard — redirect to login if not logged in
 function PrivateRoute({ children }) {
@@ -30,6 +31,9 @@ export default function App() {
         } />
         <Route path="/matches" element={
           <PrivateRoute><Matches /></PrivateRoute>
+        } />
+        <Route path="/profile" element={
+          <PrivateRoute><Profile /></PrivateRoute>
         } />
       </Routes>
     </BrowserRouter>
