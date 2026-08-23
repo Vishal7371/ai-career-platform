@@ -15,7 +15,7 @@ export default function Dashboard() {
     { icon: '📄', label: 'Resume',       path: '/resume',    active: false },
     { icon: '💼', label: 'Job Matching', path: '/jobs',      active: false },
     { icon: '🎯', label: 'My Matches',   path: '/matches',   active: false },
-    { icon: '🤖', label: 'AI Assistant', path: '/dashboard', active: false },
+    { icon: '📊', label: 'Analytics',    path: '/analytics', active: false },
     { icon: '⚙️', label: 'Settings',     path: '/profile',   active: false },
   ]
 
