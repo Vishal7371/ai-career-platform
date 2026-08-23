@@ -6,6 +6,8 @@ from app.api.routes import jobs
 from app.api.routes import resume
 from app.api.routes import matching
 from app.api.routes import profile
+from app.api.routes import advisor
+
 
 
 app = FastAPI(
@@ -28,6 +30,8 @@ app.include_router(jobs.router)
 app.include_router(resume.router)
 app.include_router(matching.router)
 app.include_router(profile.router)
+app.include_router(advisor.router)
+
 
 # Register route modules
 app.include_router(auth.router)                    # ← ADD THIS
