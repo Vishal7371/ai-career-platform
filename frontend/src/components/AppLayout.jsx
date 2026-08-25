@@ -1,34 +1,19 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 
-const navSections = [
-  {
-    label: 'MAIN',
-    items: [
-      { icon: '⊞', label: 'Dashboard',    path: '/dashboard' },
-      { icon: '📄', label: 'Resume',       path: '/resume'    },
-      { icon: '💼', label: 'Job Matching', path: '/jobs'      },
-    ]
-  },
-  {
-    label: 'INSIGHTS',
-    items: [
-      { icon: '🎯', label: 'My Matches',  path: '/matches'   },
-      { icon: '📊', label: 'Analytics',   path: '/analytics' },
-      { icon: '🤖', label: 'AI Advisor',  path: '/advisor'   },
-    ]
-  },
-  {
-    label: 'ACCOUNT',
-    items: [
-      { icon: '⚙️', label: 'Settings',    path: '/profile'   },
-    ]
-  }
+const navItems = [
+  { icon: '⊞', label: 'Dashboard',   path: '/dashboard' },
+  { icon: '📄', label: 'Resume',      path: '/resume'    },
+  { icon: '💼', label: 'Jobs',        path: '/jobs'      },
+  { icon: '🎯', label: 'Matches',     path: '/matches'   },
+  { icon: '📊', label: 'Analytics',   path: '/analytics' },
+  { icon: '🤖', label: 'AI Advisor',  path: '/advisor'   },
+  { icon: '⚙️', label: 'Settings',    path: '/profile'   },
 ]
 
-export default function AppLayout({ children, pageTitle = 'Dashboard', breadcrumb = 'Dashboard' }) {
-  const navigate  = useNavigate()
-  const location  = useLocation()
-  const user      = JSON.parse(localStorage.getItem('user') || '{}')
+export default function AppLayout({ children, breadcrumb = 'Dashboard' }) {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const user     = JSON.parse(localStorage.getItem('user') || '{}')
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -37,71 +22,53 @@ export default function AppLayout({ children, pageTitle = 'Dashboard', breadcrum
   }
 
   return (
-    <div className="app-shell">
-      {/* ── Sidebar ── */}
-      <aside className="pro-sidebar open">
-        <div className="pro-logo">
-          <div className="pro-logo-icon">AI</div>
-          <span className="pro-logo-text">CareerAI</span>
+    <div className="layout-root">
+
+      {/* ── Top Header ── */}
+      <header className="top-header">
+        <div className="top-header-left">
+          <div className="top-logo">
+            <div className="top-logo-icon">AI</div>
+            <span className="top-logo-text">CareerAI</span>
+          </div>
         </div>
 
-        <nav className="pro-nav">
-          {navSections.map(section => (
-            <div key={section.label} className="pro-nav-section">
-              <p className="pro-section-label">{section.label}</p>
-              {section.items.map(item => (
-                <button
-                  key={item.path}
-                  className={`pro-nav-item ${location.pathname === item.path ? 'active' : ''}`}
-                  onClick={() => navigate(item.path)}
-                >
-                  <span className="pro-nav-icon">{item.icon}</span>
-                  <span className="pro-nav-label">{item.label}</span>
-                </button>
-              ))}
-            </div>
+        {/* ── Nav Buttons ── */}
+        <nav className="top-nav">
+          {navItems.map(item => (
+            <button
+              key={item.path}
+              className={`top-nav-btn ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => navigate(item.path)}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
           ))}
         </nav>
 
-        <div className="pro-sidebar-footer">
-          <div className="pro-user-mini">
-            <div className="pro-avatar-sm">
-              {(user.username || 'U')[0].toUpperCase()}
-            </div>
-            <div className="pro-user-info">
-              <p className="pro-user-name">{user.username || 'User'}</p>
-              <p className="pro-user-role">Job Seeker</p>
-            </div>
+        <div className="top-header-right">
+          <div className="top-user-chip">
+            <div className="top-avatar">{(user.username || 'U')[0].toUpperCase()}</div>
+            <span className="top-username">{user.username || 'User'}</span>
           </div>
-          <button className="pro-logout-btn" onClick={handleLogout}>⎋</button>
+          <button className="top-logout-btn" onClick={handleLogout}>
+            Sign out
+          </button>
         </div>
-      </aside>
+      </header>
 
-      {/* ── Main ── */}
-      <div className="pro-main">
-        <header className="pro-topbar">
-          <div className="pro-topbar-left">
-            <div className="pro-breadcrumb">
-              <span>Home</span>
-              <span className="pro-breadcrumb-sep">›</span>
-              <span className="pro-breadcrumb-active">{breadcrumb}</span>
-            </div>
-          </div>
-          <div className="pro-topbar-right">
-            <div className="pro-search-box">
-              <span>🔍</span>
-              <input placeholder="Search..." />
-            </div>
-            <div className="pro-topbar-avatar">
-              {(user.username || 'U')[0].toUpperCase()}
-            </div>
-          </div>
-        </header>
-
-        <main className="pro-content">
-          {children}
-        </main>
+      {/* ── Breadcrumb ── */}
+      <div className="layout-breadcrumb">
+        <span>Home</span>
+        <span className="bc-sep">›</span>
+        <span className="bc-active">{breadcrumb}</span>
       </div>
+
+      {/* ── Page Content ── */}
+      <main className="layout-content">
+        {children}
+      </main>
     </div>
   )
 }
