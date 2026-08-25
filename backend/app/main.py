@@ -7,7 +7,6 @@ from app.api.routes import resume
 from app.api.routes import matching
 from app.api.routes import profile
 from app.api.routes import advisor
-from app.api.routes import remote_jobs
 
 
 
@@ -32,7 +31,6 @@ app.include_router(resume.router)
 app.include_router(matching.router)
 app.include_router(profile.router)
 app.include_router(advisor.router)
-app.include_router(remote_jobs.router)
 
 
 # Register route modules
