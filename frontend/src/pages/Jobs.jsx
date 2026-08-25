@@ -1,3 +1,4 @@
+import AppLayout from '../components/AppLayout'
 import { useState, useEffect } from 'react'
 import API from '../services/api'
 
@@ -29,57 +30,57 @@ export default function Jobs() {
   }
 
   return (
-    <div className="dash-content">
-      <div className="page-header">
-        <h2>💼 Job Listings</h2>
-        <span className="badge-count">{total} jobs found</span>
-      </div>
-
-      {/* Search bar */}
-      <div className="search-bar">
-        <span className="search-icon">🔍</span>
-        <input
-          placeholder="Search jobs, companies, skills..."
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value)
-            fetchJobs(e.target.value)
-          }}
-        />
-      </div>
-
-      {/* Job cards */}
-      {loading ? (
-        <div className="loading-state">Loading jobs...</div>
-      ) : (
-        <div className="job-list">
-          {jobs.map((job) => (
-            <div key={job.id} className="job-card">
-              <div className="job-card-top">
-                <div>
-                  <h3 className="job-title">{job.title}</h3>
-                  <p className="job-company">🏢 {job.company} · 📍 {job.location}</p>
-                </div>
-                <span className={`job-type-badge ${job.job_type?.toLowerCase().replace('-','')}`}>
-                  {job.job_type}
-                </span>
-              </div>
-              <p className="job-desc">{job.description}</p>
-              <div className="job-footer">
-                <div className="job-skills">
-                  {job.skills?.split(',').map(s => (
-                    <span key={s} className="skill-tag">{s.trim()}</span>
-                  ))}
-                </div>
-                <div className="job-meta">
-                  <span>💰 {formatSalary(job.salary_min, job.salary_max)}</span>
-                  <span>🎯 {job.experience}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+    <AppLayout breadcrumb="Job Matching">
+      <div className="dash-content">
+        <div className="page-header">
+          <h2>💼 Job Listings</h2>
+          <span className="badge-count">{total} jobs found</span>
         </div>
-      )}
-    </div>
+
+        <div className="search-bar">
+          <span className="search-icon">🔍</span>
+          <input
+            placeholder="Search jobs, companies, skills..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value)
+              fetchJobs(e.target.value)
+            }}
+          />
+        </div>
+
+        {loading ? (
+          <div className="loading-state">Loading jobs...</div>
+        ) : (
+          <div className="job-list">
+            {jobs.map((job) => (
+              <div key={job.id} className="job-card">
+                <div className="job-card-top">
+                  <div>
+                    <h3 className="job-title">{job.title}</h3>
+                    <p className="job-company">🏢 {job.company} · 📍 {job.location}</p>
+                  </div>
+                  <span className={`job-type-badge ${job.job_type?.toLowerCase().replace('-','')}`}>
+                    {job.job_type}
+                  </span>
+                </div>
+                <p className="job-desc">{job.description}</p>
+                <div className="job-footer">
+                  <div className="job-skills">
+                    {job.skills?.split(',').map(s => (
+                      <span key={s} className="skill-tag">{s.trim()}</span>
+                    ))}
+                  </div>
+                  <div className="job-meta">
+                    <span>💰 {formatSalary(job.salary_min, job.salary_max)}</span>
+                    <span>🎯 {job.experience}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </AppLayout>
   )
 }

@@ -1,3 +1,4 @@
+import AppLayout from '../components/AppLayout'
 import { useState, useEffect, useRef } from 'react'
 import API from '../services/api'
 
@@ -41,6 +42,7 @@ export default function ResumePage() {
   }
 
   return (
+    <AppLayout breadcrumb="Resume">
     <div className="dash-content">
       <div className="page-header">
         <h2>📄 Resume Manager</h2>
@@ -104,5 +106,6 @@ export default function ResumePage() {
         </div>
       )}
     </div>
+    </AppLayout>
   )
 }

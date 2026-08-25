@@ -1,115 +1,226 @@
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+
+const navSections = [
+  {
+    label: 'MAIN',
+    items: [
+      { icon: '⊞', label: 'Dashboard',    path: '/dashboard' },
+      { icon: '📄', label: 'Resume',       path: '/resume'    },
+      { icon: '💼', label: 'Job Matching', path: '/jobs'      },
+    ]
+  },
+  {
+    label: 'INSIGHTS',
+    items: [
+      { icon: '🎯', label: 'My Matches',  path: '/matches'   },
+      { icon: '📊', label: 'Analytics',   path: '/analytics' },
+      { icon: '🤖', label: 'AI Advisor',  path: '/advisor'   },
+    ]
+  },
+  {
+    label: 'ACCOUNT',
+    items: [
+      { icon: '👤', label: 'Profile',     path: '/profile'   },
+    ]
+  }
+]
 
 export default function Dashboard() {
-  const navigate = useNavigate()
-  const user     = JSON.parse(localStorage.getItem('user') || '{}')
+  const navigate  = useNavigate()
+  const location  = useLocation()
+  const user      = JSON.parse(localStorage.getItem('user') || '{}')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     navigate('/login')
   }
 
-  const navItems = [
-    { icon: '🏠', label: 'Dashboard',    path: '/dashboard', active: true  },
-    { icon: '📄', label: 'Resume',       path: '/resume',    active: false },
-    { icon: '💼', label: 'Job Matching', path: '/jobs',      active: false },
-    { icon: '🎯', label: 'My Matches',   path: '/matches',   active: false },
-    { icon: '📊', label: 'Analytics',    path: '/analytics', active: false },
-    { icon: '🤖', label: 'AI Advisor',   path: '/advisor',   active: false },
-    { icon: '⚙️', label: 'Settings',     path: '/profile',   active: false },
-  ]
-
   const stats = [
-    { icon: '📄', value: '0',  label: 'Resumes Uploaded'  },
-    { icon: '💼', value: '0',  label: 'Jobs Matched'       },
-    { icon: '🎯', value: '0%', label: 'Profile Complete'   },
-    { icon: '⚡', value: '0',  label: 'AI Insights'        },
+    { label: 'Resume Uploads',   value: '1',   icon: '📄', change: '+1 today',   color: '#6366f1' },
+    { label: 'Jobs Available',   value: '5',   icon: '💼', change: 'Browse all',  color: '#0ea5e9' },
+    { label: 'Best Match Score', value: '80%', icon: '🎯', change: 'View matches', color: '#10b981' },
+    { label: 'Skills Detected',  value: '12',  icon: '🧠', change: 'From resume', color: '#f59e0b' },
   ]
 
-  const features = [
-    { icon: '📄', title: 'Resume Analysis',    desc: 'Upload your resume and get AI-powered skill extraction and analysis.',    color1: '#7c3aed', color2: '#5b21b6' },
-    { icon: '💼', title: 'Smart Job Matching', desc: 'Match your profile with thousands of jobs using semantic AI matching.',    color1: '#0891b2', color2: '#0e7490' },
-    { icon: '📊', title: 'Skill Gap Analysis', desc: 'Discover skills you need to land your dream role with detailed roadmaps.',  color1: '#059669', color2: '#047857' },
-    { icon: '🤖', title: 'AI Career Chat',     desc: 'Chat with your personal AI career assistant powered by LLM and RAG.',     color1: '#db2777', color2: '#be185d' },
+  const quickLinks = [
+    { label: 'Upload Resume',   path: '/resume',    icon: '📄', desc: 'Add your PDF' },
+    { label: 'Find Jobs',       path: '/jobs',      icon: '💼', desc: 'Browse openings' },
+    { label: 'Check Matches',   path: '/matches',   icon: '🎯', desc: 'AI matching' },
+    { label: 'Ask AI Advisor',  path: '/advisor',   icon: '🤖', desc: 'Get advice' },
   ]
 
   return (
-    <div className="dashboard-layout">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="sidebar-logo">
-          <span>⚡</span>
-          <h2>AI Career</h2>
+    <div className="app-shell">
+
+      {/* ── Sidebar ── */}
+      <aside className={`pro-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
+        {/* Logo */}
+        <div className="pro-logo">
+          <div className="pro-logo-icon">AI</div>
+          {sidebarOpen && <span className="pro-logo-text">CareerAI</span>}
         </div>
 
-        <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <div key={item.label} className={`nav-item ${item.active ? 'active' : ''}`} onClick={() => navigate(item.path)}>
-              <span className="icon">{item.icon}</span>
-              {item.label}
+        {/* Nav sections */}
+        <nav className="pro-nav">
+          {navSections.map(section => (
+            <div key={section.label} className="pro-nav-section">
+              {sidebarOpen && <p className="pro-section-label">{section.label}</p>}
+              {section.items.map(item => (
+                <button
+                  key={item.path}
+                  className={`pro-nav-item ${location.pathname === item.path ? 'active' : ''}`}
+                  onClick={() => navigate(item.path)}
+                >
+                  <span className="pro-nav-icon">{item.icon}</span>
+                  {sidebarOpen && <span className="pro-nav-label">{item.label}</span>}
+                </button>
+              ))}
             </div>
           ))}
         </nav>
 
-        <div className="sidebar-user">
-          <div className="user-avatar">
-            {(user.username || 'U')[0].toUpperCase()}
+        {/* User + Logout */}
+        <div className="pro-sidebar-footer">
+          <div className="pro-user-mini">
+            <div className="pro-avatar-sm">
+              {(user.username || 'U')[0].toUpperCase()}
+            </div>
+            {sidebarOpen && (
+              <div className="pro-user-info">
+                <p className="pro-user-name">{user.username || 'User'}</p>
+                <p className="pro-user-role">Job Seeker</p>
+              </div>
+            )}
           </div>
-          <div className="user-info">
-            <h4>{user.username || 'User'}</h4>
-            <p>Free Plan</p>
-          </div>
+          {sidebarOpen && (
+            <button className="pro-logout-btn" onClick={handleLogout}>⎋</button>
+          )}
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="dashboard-main">
-        {/* Header */}
-        <header className="dash-header">
-          <div>
-            <h1>Good morning, {user.username}! 👋</h1>
-            <p>Here's your career intelligence overview</p>
+      {/* ── Main ── */}
+      <div className="pro-main">
+
+        {/* Top bar */}
+        <header className="pro-topbar">
+          <div className="pro-topbar-left">
+            <button className="pro-toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+              ☰
+            </button>
+            <div className="pro-breadcrumb">
+              <span>Home</span>
+              <span className="pro-breadcrumb-sep">›</span>
+              <span className="pro-breadcrumb-active">Dashboard</span>
+            </div>
           </div>
-          <button className="btn-logout" onClick={logout}>Sign out</button>
+          <div className="pro-topbar-right">
+            <div className="pro-search-box">
+              <span>🔍</span>
+              <input placeholder="Search..." />
+            </div>
+            <div className="pro-topbar-avatar">
+              {(user.username || 'U')[0].toUpperCase()}
+            </div>
+          </div>
         </header>
 
-        <div className="dash-content">
-          {/* Welcome Banner */}
-          <div className="welcome-banner">
-            <h2>Your AI Career Journey Starts Here</h2>
-            <p>Upload your resume to unlock AI-powered insights, job matching, and personalized recommendations.</p>
+        {/* Content */}
+        <main className="pro-content">
+          <div className="pro-page-title">
+            <div>
+              <h1>Welcome back, {user.username || 'User'} 👋</h1>
+              <p>Here's your career overview for today</p>
+            </div>
           </div>
 
-          {/* Stats */}
-          <div className="stats-row">
-            {stats.map((s) => (
-              <div key={s.label} className="stat-card">
-                <div className="stat-icon">{s.icon}</div>
-                <div className="stat-value">{s.value}</div>
-                <div className="stat-label">{s.label}</div>
+          {/* Stats row */}
+          <div className="pro-stats-grid">
+            {stats.map(s => (
+              <div key={s.label} className="pro-stat-card">
+                <div className="pro-stat-left">
+                  <p className="pro-stat-label">{s.label}</p>
+                  <h2 className="pro-stat-value">{s.value}</h2>
+                  <span className="pro-stat-change">{s.change}</span>
+                </div>
+                <div className="pro-stat-icon" style={{ background: s.color + '20', color: s.color }}>
+                  {s.icon}
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Feature Cards */}
-          <h3 className="section-title">Platform Features</h3>
-          <div className="feature-grid">
-            {features.map((f) => (
-              <div
-                key={f.title}
-                className="feature-card"
-                style={{ '--card-color1': f.color1, '--card-color2': f.color2 }}
-              >
-                <div className="feature-card-icon">{f.icon}</div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-                <span className="badge-soon">Coming soon</span>
-              </div>
+          {/* Quick actions */}
+          <div className="pro-section-header">
+            <h2>Quick Actions</h2>
+            <p>Jump right in</p>
+          </div>
+          <div className="pro-quick-grid">
+            {quickLinks.map(q => (
+              <button key={q.path} className="pro-quick-card" onClick={() => navigate(q.path)}>
+                <div className="pro-quick-icon">{q.icon}</div>
+                <div>
+                  <h3>{q.label}</h3>
+                  <p>{q.desc}</p>
+                </div>
+                <span className="pro-quick-arrow">→</span>
+              </button>
             ))}
           </div>
-        </div>
-      </main>
+
+          {/* Bottom row */}
+          <div className="pro-bottom-grid">
+            {/* Career progress */}
+            <div className="pro-card">
+              <div className="pro-card-header">
+                <h3>Career Progress</h3>
+              </div>
+              <div className="pro-progress-list">
+                {[
+                  { label: 'Profile Setup',    pct: 100 },
+                  { label: 'Resume Uploaded',  pct: 100 },
+                  { label: 'Job Matches',      pct: 80  },
+                  { label: 'Skills Coverage',  pct: 65  },
+                  { label: 'Applications',     pct: 20  },
+                ].map(p => (
+                  <div key={p.label} className="pro-progress-item">
+                    <div className="pro-progress-top">
+                      <span>{p.label}</span>
+                      <span>{p.pct}%</span>
+                    </div>
+                    <div className="pro-progress-bar">
+                      <div className="pro-progress-fill" style={{ width: `${p.pct}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tips card */}
+            <div className="pro-card">
+              <div className="pro-card-header">
+                <h3>💡 Career Tips</h3>
+              </div>
+              <div className="pro-tips-list">
+                {[
+                  { icon: '📄', tip: 'Keep resume under 2 pages for best results' },
+                  { icon: '🎯', tip: 'Target jobs with 60%+ match score first' },
+                  { icon: '🧠', tip: 'Add missing skills to boost your match rate' },
+                  { icon: '🤖', tip: 'Ask the AI Advisor for personalized advice' },
+                  { icon: '💼', tip: 'Apply to 3-5 jobs per week consistently' },
+                ].map((t, i) => (
+                  <div key={i} className="pro-tip-item">
+                    <span className="pro-tip-icon">{t.icon}</span>
+                    <span>{t.tip}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
