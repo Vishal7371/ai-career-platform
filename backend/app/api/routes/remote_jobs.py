@@ -2,68 +2,69 @@ import requests
 from fastapi import APIRouter
 import time
 
-router = APIRouter(prefix="/remote-jobs", tags=["Remote Jobs"])
+router = APIRouter(prefix="/live-jobs", tags=["Live Jobs"])
 
-REMOTEOK_URL = "https://remoteok.com/api"
-HEADERS      = {"User-Agent": "CareerAI-Platform/1.0"}
+ARBEITNOW_URL = "https://www.arbeitnow.com/api/job-board-api"
+_cache        = {"data": [], "timestamp": 0}
+CACHE_TTL     = 600  # 10 min
 
-_cache = {"data": [], "timestamp": 0}
-CACHE_TTL = 600  # 10 minutes
-
-def fetch_jobs(search: str = ""):
+def fetch(search: str = "", tag: str = ""):
     now = time.time()
     if _cache["data"] and (now - _cache["timestamp"]) < CACHE_TTL:
         jobs = _cache["data"]
     else:
         try:
-            res  = requests.get(REMOTEOK_URL, headers=HEADERS, timeout=15)
-            data = res.json()
-            jobs = [j for j in data if isinstance(j, dict) and j.get("id")]
-            _cache["data"]      = jobs
+            res  = requests.get(ARBEITNOW_URL, timeout=12)
+            data = res.json().get("data", [])
+            _cache["data"]      = data
             _cache["timestamp"] = now
+            jobs = data
         except Exception as e:
             return {"jobs": [], "total": 0, "error": str(e)}
 
+    # Filter
     if search:
         s = search.lower()
         jobs = [j for j in jobs if s in (
-            j.get("position", "") + " " +
-            j.get("company", "") + " " +
+            j.get("title","") + " " + j.get("company_name","") + " " +
             " ".join(j.get("tags", []))
         ).lower()]
+    if tag:
+        jobs = [j for j in jobs if tag.lower() in [t.lower() for t in j.get("tags", [])]]
 
     formatted = []
-    for j in jobs[:50]:
-        salary_raw = j.get("salary", "") or ""
-        salary_min = j.get("salary_min") or None
-        salary_max = j.get("salary_max") or None
-
-        if salary_min and salary_max:
-            salary = f"${int(salary_min):,} – ${int(salary_max):,} / yr"
-        elif salary_raw:
-            salary = salary_raw
-        else:
-            salary = "Competitive"
-
-        slug = j.get("slug", j.get("id", ""))
+    for j in jobs[:60]:
+        tags   = j.get("tags", [])
+        salary = j.get("salary", "") or "Competitive"
         formatted.append({
-            "id":          str(j.get("id", "")),
-            "title":       j.get("position", "Unknown Role"),
-            "company":     j.get("company",  "Unknown Company"),
-            "location":    j.get("location") or "🌍 Remote Worldwide",
+            "id":          str(j.get("slug", "")),
+            "title":       j.get("title", "Unknown Role"),
+            "company":     j.get("company_name", "Unknown Company"),
+            "location":    j.get("location") or "Remote",
             "description": (j.get("description") or "")[:300].strip(),
-            "skills":      ", ".join(j.get("tags", [])[:8]),
+            "skills":      ", ".join(tags[:8]),
             "salary":      salary,
-            "apply_url":   j.get("url") or f"https://remoteok.com/l/{slug}",
-            "logo":        j.get("logo", ""),
-            "date":        j.get("date", ""),
-            "job_type":    "Remote",
-            "source":      "RemoteOK",
+            "apply_url":   j.get("url", ""),
+            "logo":        j.get("company_logo", ""),
+            "remote":      j.get("remote", False),
+            "job_type":    "Remote" if j.get("remote") else "On-site",
+            "source":      "Arbeitnow",
+            "created_at":  j.get("created_at", ""),
         })
 
     return {"jobs": formatted, "total": len(formatted)}
 
 
 @router.get("")
-def get_remote_jobs(search: str = ""):
-    return fetch_jobs(search)
+def get_live_jobs(search: str = "", tag: str = ""):
+    return fetch(search, tag)
+
+@router.get("/tags")
+def get_popular_tags():
+    data = fetch()
+    tag_count = {}
+    for j in data.get("jobs", []):
+        for t in j["skills"].split(", ") if j["skills"] else []:
+            tag_count[t] = tag_count.get(t, 0) + 1
+    sorted_tags = sorted(tag_count.items(), key=lambda x: -x[1])[:20]
+    return {"tags": [t[0] for t in sorted_tags]}
