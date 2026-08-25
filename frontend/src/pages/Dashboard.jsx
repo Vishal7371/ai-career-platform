@@ -5,100 +5,109 @@ export default function Dashboard() {
   const navigate = useNavigate()
   const user     = JSON.parse(localStorage.getItem('user') || '{}')
 
-  const stats = [
-    { label: 'Resume Uploads',   value: '1',   icon: '📄', change: '+1 today',    color: '#111' },
-    { label: 'Jobs Available',   value: '5',   icon: '💼', change: 'Browse all',  color: '#111' },
-    { label: 'Best Match Score', value: '80%', icon: '🎯', change: 'View matches', color: '#111' },
-    { label: 'Skills Detected',  value: '12',  icon: '🧠', change: 'From resume',  color: '#111' },
+  const kpis = [
+    { icon: '💼', label: 'Job Posts',      value: '5',   sub: 'Available'   },
+    { icon: '📄', label: 'Applications',   value: '0',   sub: 'Total'       },
+    { icon: '🎯', label: 'New Matches',     value: '3',   sub: 'New'         },
+    { icon: '🧠', label: 'Skills Detected', value: '12+', sub: 'From resume' },
   ]
 
-  const quickLinks = [
-    { label: 'Upload Resume',  path: '/resume',    icon: '📄', desc: 'Add your PDF' },
-    { label: 'Find Jobs',      path: '/jobs',      icon: '💼', desc: 'Browse openings' },
-    { label: 'Check Matches',  path: '/matches',   icon: '🎯', desc: 'AI matching' },
-    { label: 'Ask AI Advisor', path: '/advisor',   icon: '🤖', desc: 'Get advice' },
+  const actionGroups = [
+    [
+      { icon: '📄', label: 'Update Resume',  desc: 'Edit profile & skillset',    path: '/resume'   },
+      { icon: '💼', label: 'Post New Job',   desc: 'Browse available roles',     path: '/jobs'     },
+    ],
+    [
+      { icon: '🗓️', label: 'Check Matches',  desc: 'View AI job matches',         path: '/matches'  },
+      { icon: '🤖', label: 'Ask AI Advisor', desc: 'Get career guidance',         path: '/advisor'  },
+    ],
+  ]
+
+  const progress = [
+    { label: 'Profile Setup',   pct: 100, sub: 'Complete' },
+    { label: 'Resume Uploaded', pct: 100, sub: 'Parsed'   },
+    { label: 'Job Matches',     pct: 80,  sub: '4 found'  },
+    { label: 'Skills Coverage', pct: 65,  sub: '12 skills'},
+    { label: 'Applications',    pct: 15,  sub: 'Start now'},
+  ]
+
+  const tips = [
+    'Add key skills (Python, SQL, FastAPI)',
+    'Complete your experience details',
+    'Highlight your achievements',
+    'Include a professional summary',
+    'Upload projects to GitHub',
   ]
 
   return (
     <AppLayout breadcrumb="Dashboard">
       <div className="dash-content">
 
-        <div className="dash-page-title">
-          <h1>Welcome back, {user.username || 'User'} 👋</h1>
-          <p>Here's your career overview for today</p>
+        {/* Welcome */}
+        <div className="db-welcome">
+          <h1>Welcome back, {user.username || 'User'}! ☀️</h1>
+          <p>Here's your career overview for today.</p>
         </div>
 
-        {/* Stats */}
-        <div className="pro-stats-grid">
-          {stats.map(s => (
-            <div key={s.label} className="pro-stat-card">
-              <div>
-                <p className="pro-stat-label">{s.label}</p>
-                <h2 className="pro-stat-value">{s.value}</h2>
-                <span className="pro-stat-change">{s.change}</span>
+        {/* KPI Cards */}
+        <div className="db-kpi-grid">
+          {kpis.map(k => (
+            <div key={k.label} className="db-kpi-card">
+              <div className="db-kpi-top">
+                <div className="db-kpi-icon">{k.icon}</div>
+                <span className="db-kpi-label">{k.label}</span>
               </div>
-              <div className="pro-stat-icon" style={{ background: '#f3f4f6', color: s.color }}>
-                {s.icon}
-              </div>
+              <div className="db-kpi-value">{k.value}</div>
+              <div className="db-kpi-sub">{k.sub}</div>
             </div>
           ))}
         </div>
 
-        {/* Quick actions */}
-        <div className="pro-section-header">
-          <h2>Quick Actions</h2>
-          <p>Jump right in</p>
-        </div>
-        <div className="pro-quick-grid">
-          {quickLinks.map(q => (
-            <button key={q.path} className="pro-quick-card" onClick={() => navigate(q.path)}>
-              <div className="pro-quick-icon">{q.icon}</div>
-              <div>
-                <h3>{q.label}</h3>
-                <p>{q.desc}</p>
-              </div>
-              <span className="pro-quick-arrow">→</span>
-            </button>
+        {/* Quick Actions — 2 columns, 2 items each */}
+        <div className="db-actions-grid">
+          {actionGroups.map((group, gi) => (
+            <div key={gi} className="db-actions-card">
+              {group.map(a => (
+                <div key={a.path} className="db-action-item" onClick={() => navigate(a.path)}>
+                  <div className="db-action-icon">{a.icon}</div>
+                  <div className="db-action-text">
+                    <h4>{a.label}</h4>
+                    <p>{a.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           ))}
         </div>
 
-        {/* Bottom cards */}
-        <div className="pro-bottom-grid">
-          <div className="pro-card">
-            <div className="pro-card-header"><h3>Career Progress</h3></div>
-            <div className="pro-progress-list">
-              {[
-                { label: 'Profile Setup',   pct: 100 },
-                { label: 'Resume Uploaded', pct: 100 },
-                { label: 'Job Matches',     pct: 80  },
-                { label: 'Skills Coverage', pct: 65  },
-                { label: 'Applications',    pct: 20  },
-              ].map(p => (
-                <div key={p.label}>
-                  <div className="pro-progress-top">
-                    <span>{p.label}</span><span>{p.pct}%</span>
+        {/* Bottom row */}
+        <div className="db-bottom-grid">
+          {/* Progress */}
+          <div className="db-card">
+            <div className="db-card-title">Recruitment Pipeline Overview</div>
+            <div className="db-progress-list">
+              {progress.map(p => (
+                <div key={p.label} className="db-progress-row">
+                  <div className="db-progress-meta">
+                    <span>{p.pct}% · {p.sub}</span>
+                    <span>{p.label}</span>
                   </div>
-                  <div className="pro-progress-bar">
-                    <div className="pro-progress-fill" style={{ width: `${p.pct}%` }} />
+                  <div className="db-progress-bar">
+                    <div className="db-progress-fill" style={{ width: `${p.pct}%` }} />
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="pro-card">
-            <div className="pro-card-header"><h3>💡 Career Tips</h3></div>
-            <div className="pro-tips-list">
-              {[
-                { icon: '📄', tip: 'Keep resume under 2 pages for best results' },
-                { icon: '🎯', tip: 'Target jobs with 60%+ match score first' },
-                { icon: '🧠', tip: 'Add missing skills to boost your match rate' },
-                { icon: '🤖', tip: 'Ask the AI Advisor for personalized advice' },
-                { icon: '💼', tip: 'Apply to 3–5 jobs per week consistently' },
-              ].map((t, i) => (
-                <div key={i} className="pro-tip-item">
-                  <span className="pro-tip-icon">{t.icon}</span>
-                  <span>{t.tip}</span>
+          {/* Tips */}
+          <div className="db-card">
+            <div className="db-card-title">Optimize Your Profile</div>
+            <div className="db-check-list">
+              {tips.map((t, i) => (
+                <div key={i} className="db-check-item">
+                  <span className="db-check-icon">✓</span>
+                  <span>{i + 1}. {t}</span>
                 </div>
               ))}
             </div>

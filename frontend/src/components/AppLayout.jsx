@@ -1,19 +1,20 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 
 const navItems = [
-  { icon: '⊞', label: 'Dashboard',   path: '/dashboard' },
-  { icon: '📄', label: 'Resume',      path: '/resume'    },
-  { icon: '💼', label: 'Jobs',        path: '/jobs'      },
-  { icon: '🎯', label: 'Matches',     path: '/matches'   },
-  { icon: '📊', label: 'Analytics',   path: '/analytics' },
-  { icon: '🤖', label: 'AI Advisor',  path: '/advisor'   },
-  { icon: '⚙️', label: 'Settings',    path: '/profile'   },
+  { label: 'Dashboard',  path: '/dashboard' },
+  { label: 'Resume',     path: '/resume'    },
+  { label: 'Jobs',       path: '/jobs'      },
+  { label: 'Matches',    path: '/matches'   },
+  { label: 'Analytics',  path: '/analytics' },
+  { label: 'AI Advisor', path: '/advisor'   },
+  { label: 'Settings',   path: '/profile'   },
 ]
 
 export default function AppLayout({ children, breadcrumb = 'Dashboard' }) {
   const navigate = useNavigate()
   const location = useLocation()
   const user     = JSON.parse(localStorage.getItem('user') || '{}')
+  const initials = (user.username || 'U').slice(0, 2).toUpperCase()
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -22,51 +23,41 @@ export default function AppLayout({ children, breadcrumb = 'Dashboard' }) {
   }
 
   return (
-    <div className="layout-root">
+    <div className="lx-root">
 
-      {/* ── Top Header ── */}
-      <header className="top-header">
-        <div className="top-header-left">
-          <div className="top-logo">
-            <div className="top-logo-icon">AI</div>
-            <span className="top-logo-text">CareerAI</span>
-          </div>
+      {/* ── Top Nav ── */}
+      <header className="lx-header">
+        {/* Logo */}
+        <div className="lx-logo" onClick={() => navigate('/dashboard')}>
+          <div className="lx-logo-box">C</div>
+          <span className="lx-logo-name">CareerAI</span>
         </div>
 
-        {/* ── Nav Buttons ── */}
-        <nav className="top-nav">
+        {/* Nav links */}
+        <nav className="lx-nav">
           {navItems.map(item => (
             <button
               key={item.path}
-              className={`top-nav-btn ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => navigate(item.path)}
+              className={`lx-nav-link ${location.pathname === item.path ? 'lx-active' : ''}`}
             >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
+              {item.label}
             </button>
           ))}
         </nav>
 
-        <div className="top-header-right">
-          <div className="top-user-chip">
-            <div className="top-avatar">{(user.username || 'U')[0].toUpperCase()}</div>
-            <span className="top-username">{user.username || 'User'}</span>
+        {/* Right side */}
+        <div className="lx-header-right">
+          <div className="lx-user-badge" onClick={handleLogout} title="Click to sign out">
+            <div className="lx-avatar">{initials}</div>
+            <span className="lx-username">{user.username || 'User'}</span>
+            <span className="lx-chevron">∨</span>
           </div>
-          <button className="top-logout-btn" onClick={handleLogout}>
-            Sign out
-          </button>
         </div>
       </header>
 
-      {/* ── Breadcrumb ── */}
-      <div className="layout-breadcrumb">
-        <span>Home</span>
-        <span className="bc-sep">›</span>
-        <span className="bc-active">{breadcrumb}</span>
-      </div>
-
-      {/* ── Page Content ── */}
-      <main className="layout-content">
+      {/* ── Page ── */}
+      <main className="lx-page">
         {children}
       </main>
     </div>
