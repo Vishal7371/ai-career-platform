@@ -419,3 +419,20 @@ button { cursor: pointer; }
   .db-actions-grid, .db-bottom-grid, .profile-grid, .analytics-grid { grid-template-columns: 1fr; }
   .analytics-card-wide { grid-column: span 1; }
 }
+
+/* Apply Button */
+.apply-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  background: #111;
+  color: #fff;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.apply-btn:hover { opacity: 0.8; }
