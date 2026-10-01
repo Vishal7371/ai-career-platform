@@ -1,6 +1,5 @@
 # 🚀 AI-Powered Data Intelligence & Career Analytics Platform
 
-> **A 90-Day Portfolio-Grade Project** | Built Step-by-Step from Zero to Production
 
 ---
 
